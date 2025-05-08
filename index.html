@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prioritize Like Ike - Eisenhower Matrix Task Manager</title>
+    <meta name="description" content="Verwalte deine Aufgaben mit der Eisenhower-Matrix. Priorisiere wie der 34. US-Präsident und steigere deine Produktivität durch die Unterscheidung von wichtigen und dringenden Aufgaben.">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <link rel=stylesheet type="text/css" href="eisenhower.css">
+    <link rel=stylesheet type="text/css" href="root.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Prioritize Like Ike</h1>
+            <p class="subtitle">Eisenhower-Matrix: Wichtig vs. Dringend - Aufgaben clever organisieren</p>
+        </header>
+        <div class="dev-sticker">
+        Made with <span class="footer-heart">❤️</span> by  padey</div>
+        <div class="matrix-grid">
+            <!-- Quadrant 1: Wichtig & Dringend -->
+            <div class="quadrant q1" data-quadrant="Q1">
+                <div class="quadrant-header q1-header">
+                    <h2>Wichtig & Dringend</h2>
+                    <span class="quadrant-label">Sofort erledigen</span>
+                </div>
+                <div class="quadrant-content" id="quadrant1">
+                    <ul class="task-list" id="tasks-q1"></ul>
+                </div>
+            </div>
+
+            <!-- Quadrant 2: Wichtig & Nicht Dringend -->
+            <div class="quadrant q2" data-quadrant="Q2">
+                <div class="quadrant-header q2-header">
+                    <h2>Wichtig & Nicht Dringend</h2>
+                    <span class="quadrant-label">Terminieren</span>
+                </div>
+                <div class="quadrant-content" id="quadrant2">
+                    <ul class="task-list" id="tasks-q2"></ul>
+                </div>
+            </div>
+
+            <!-- Quadrant 3: Nicht Wichtig & Dringend -->
+            <div class="quadrant q3" data-quadrant="Q3">
+                <div class="quadrant-header q3-header">
+                    <h2>Nicht Wichtig & Dringend</h2>
+                    <span class="quadrant-label">Delegieren</span>
+                </div>
+                <div class="quadrant-content" id="quadrant3">
+                    <ul class="task-list" id="tasks-q3"></ul>
+                </div>
+            </div>
+
+            <!-- Quadrant 4: Nicht Wichtig & Nicht Dringend -->
+            <div class="quadrant q4" data-quadrant="Q4">
+                <div class="quadrant-header q4-header">
+                    <h2>Nicht Wichtig & Nicht Dringend</h2>
+                    <span class="quadrant-label">Eliminieren</span>
+                </div>
+                <div class="quadrant-content" id="quadrant4">
+                    <ul class="task-list" id="tasks-q4"></ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Hinzufügen Button (feste Position) -->
+        <div class="add-task-container">
+            <button id="add-task-btn" class="add-task-btn">
+                <i class="fas fa-plus"></i>
+            </button>
+        </div>
+
+        <!-- Info Button mit Tooltip -->
+        <div style="position: fixed; bottom: 1.5rem; left: 1.5rem; z-index: 20;">
+            <button id="info-btn" class="info-btn">
+                <i class="fas fa-info"></i>
+            </button>
+
+            <div id="info-tooltip" class="info-tooltip">
+                <h4>Die Eisenhower-Methode:</h4>
+                <p><span style="color: var(--color-q1-bg); font-weight: bold;">Q1:</span> Sofort selbst erledigen</p>
+                <p><span style="color: var(--color-q2-bg); font-weight: bold;">Q2:</span> Terminieren und konsequent umsetzen</p>
+                <p><span style="color: var(--color-q3-bg); font-weight: bold;">Q3:</span> Wenn möglich delegieren</p>
+                <p><span style="color: var(--color-q4-bg); font-weight: bold;">Q4:</span> Eliminieren oder minimieren</p>
+
+                <hr style="margin: 12px 0; border-color: #eee;">
+
+                <h4>Tipps zur Selbstverwaltung:</h4>
+                <ol style="padding-left: 18px; margin-top: 8px;">
+                    <li>Beginne jeden Tag mit Sichtung deiner Q1-Aufgaben</li>
+                    <li>Plane regelmäßig Zeit für Q2-Aufgaben ein</li>
+                    <li>Prüfe wöchentlich, ob Q3-Aufgaben wirklich nötig sind</li>
+                    <li>Hinterfrage Q4-Aufgaben kritisch und lösche regelmäßig</li>
+                    <li>Halte die Anzahl der Aufgaben pro Quadrant überschaubar</li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- FAQ/Privacy Button -->
+        <button id="privacy-btn" class="privacy-btn" title="Datenschutz">
+            <i class="fa fa-question"></i>
+        </button>
+
+        <!-- Privacy Modal -->
+        <div id="privacy-modal" class="privacy-modal">
+            <div class="privacy-content">
+                <div class="modal-header">
+                    <h3 id="privacy-title">FAQ</h3>
+                </div>
+                <div class="modal-body">
+
+                        <ul class="faq-list">
+                            <li class="faq-item">
+                                <h4>Was ist die Eisenhower-Matrix?</h4>
+                                <p>Die Eisenhower-Matrix ist eine Methode zur Priorisierung von Aufgaben basierend auf ihrer Wichtigkeit und Dringlichkeit. Sie hilft, Aufgaben effektiv zu organisieren und zu priorisieren.</p>
+                            </li>
+
+                            <li class="faq-item">
+                                <h4>Wie funktionieren die Quadranten?</h4>
+                                <p>
+                                    - Q1 (Wichtig & Dringend): Sofort erledigen<br>
+                                    - Q2 (Wichtig & Nicht Dringend): Terminieren und planen<br>
+                                    - Q3 (Nicht Wichtig & Dringend): Delegieren<br>
+                                    - Q4 (Nicht Wichtig & Nicht Dringend): Eliminieren
+                                </p>
+                            </li>
+
+                            <li class="faq-item">
+                                <h4>Wie kann ich Aufgaben verschieben?</h4>
+                                <p>Ziehen und Ablegen (Drag & Drop) von Aufgaben zwischen den Quadranten. Dies hilft, Aufgaben neu zu priorisieren.</p>
+                            </li>
+
+                            <li class="faq-item">
+                                <h4>Werden meine Daten gespeichert?</h4>
+                                <p id="privacy-text" style="margin-bottom: 20px;">
+                            </li>
+
+                            <li class="faq-item">
+                                <h4>Kann ich Aufgaben löschen?</h4>
+                                <p>Ja, jede Aufgabe kann über den Lösch-Button (Mülleimer-Icon) entfernt werden.</p>
+                            </li>
+                        </ul>
+                     </p>
+                    <div class="modal-footer">
+                        <button id="close-privacy-btn" class="btn btn-primary">Schließen</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal zum Hinzufügen/Bearbeiten einer Aufgabe -->
+        <div id="task-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="modal-title">Neue Aufgabe hinzufügen</h3>
+                </div>
+
+                <form id="task-form" class="modal-body">
+                    <input type="hidden" id="task-id" value="">
+                    <div class="form-group">
+                        <label for="task-description">Aufgabenbeschreibung</label>
+                        <input type="text" id="task-description" placeholder="Was möchtest du erledigen?" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="task-details">Details (optional)</label>
+                        <textarea id="task-details" placeholder="Weitere Details zur Aufgabe"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="radio-group">
+                            <label>Ist diese Aufgabe wichtig?</label>
+                            <div class="radio-options">
+                                <label class="radio-label">
+                                    <input type="radio" name="importance" value="important" required>
+                                    Ja, ist wichtig
+                                </label>
+                                <label class="radio-label">
+                                    <input type="radio" name="importance" value="not-important">
+                                    Nein, nicht wichtig
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="radio-group">
+                            <label>Ist diese Aufgabe dringend?</label>
+                            <div class="radio-options">
+                                <label class="radio-label">
+                                    <input type="radio" name="urgency" value="urgent" required>
+                                    Ja, ist dringend
+                                </label>
+                                <label class="radio-label">
+                                    <input type="radio" name="urgency" value="not-urgent">
+                                    Nein, nicht dringend
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" id="cancel-btn" class="btn btn-cancel">Abbrechen</button>
+                        <button type="submit" id="submit-btn" class="btn btn-primary">Aufgabe hinzufügen</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sprachinhalte
+        const translations = {
+            de: {
+                title: "Prioritize Like Ike",
+                subtitle: "Eisenhower-Matrix: Wichtig vs. Dringend - Aufgaben clever organisieren",
+                q1Title: "Wichtig & dringend",
+                q1Label: "Sofort erledigen",
+                q2Title: "Wichtig & nicht dringend",
+                q2Label: "Terminieren",
+                q3Title: "Nicht wichtig & dringend",
+                q3Label: "Delegieren",
+                q4Title: "Nicht wichtig & nicht dringend",
+                q4Label: "Eliminieren",
+                emptyQuadrant: "Keine Aufgaben in diesem Quadranten",
+                addTask: "Neue Aufgabe hinzufügen",
+                editTask: "Aufgabe bearbeiten",
+                taskDescription: "Aufgabenbeschreibung",
+                taskPlaceholder: "Was möchtest du erledigen?",
+                taskDetails: "Details (optional)",
+                taskDetailsPlaceholder: "Weitere Details zur Aufgabe",
+                isImportant: "Ist diese Aufgabe wichtig?",
+                isUrgent: "Ist diese Aufgabe dringend?",
+                yes: "Ja",
+                no: "Nein",
+                important: "ist wichtig",
+                notImportant: "nicht wichtig",
+                urgent: "ist dringend",
+                notUrgent: "nicht dringend",
+                cancel: "Abbrechen",
+                add: "Aufgabe hinzufügen",
+                update: "Aufgabe aktualisieren",
+                delete: "Löschen",
+                edit: "Bearbeiten",
+                showDetails: "Details anzeigen",
+                hideDetails: "Details ausblenden",
+                method: "Die Eisenhower-Methode:",
+                selfManagement: "Tipps zur Selbstverwaltung:",
+                tip1: "Beginne jeden Tag mit Sichtung deiner Q1-Aufgaben",
+                tip2: "Plane regelmäßig Zeit für Q2-Aufgaben ein",
+                tip3: "Prüfe wöchentlich, ob Q3-Aufgaben wirklich nötig sind",
+                tip4: "Hinterfrage Q4-Aufgaben kritisch und lösche regelmäßig",
+                tip5: "Halte die Anzahl der Aufgaben pro Quadrant überschaubar",
+                privacy: "Datenschutz",
+                privacyTitle: "FAQ",
+                privacyText: "Diese App speichert alle deine Daten ausschließlich auf deinem Gerät. Es werden keine Daten an externe Server gesendet oder dort gespeichert. Deine Aufgabeninformationen bleiben vollständig privat und werden im lokalen Speicher deines Browsers gespeichert. Du kannst diese Daten jederzeit löschen, indem du den Speicher deines Browsers leerst oder die Entwicklertools des Browsers verwendest.",
+                close: "Schließen",
+                overdue: "Überfällig",
+                days: "Tage"
+            },
+            en: {
+                title: "Prioritize Like Ike",
+                subtitle: "Eisenhower Matrix: Important vs. Urgent - Organize tasks intelligently",
+                q1Title: "Important & Urgent",
+                q1Label: "Do immediately",
+                q2Title: "Important & Not Urgent",
+                q2Label: "Schedule",
+                q3Title: "Not Important & Urgent",
+                q3Label: "Delegate",
+                q4Title: "Not Important & Not Urgent",
+                q4Label: "Eliminate",
+                emptyQuadrant: "No tasks in this quadrant",
+                addTask: "Add new task",
+                editTask: "Edit task",
+                taskDescription: "Task description",
+                taskPlaceholder: "What do you want to accomplish?",
+                taskDetails: "Details (optional)",
+                taskDetailsPlaceholder: "Additional details for this task",
+                isImportant: "Is this task important?",
+                isUrgent: "Is this task urgent?",
+                yes: "Yes",
+                no: "No",
+                important: "is important",
+                notImportant: "not important",
+                urgent: "is urgent",
+                notUrgent: "not urgent",
+                cancel: "Cancel",
+                add: "Add task",
+                update: "Update task",
+                delete: "Delete",
+                edit: "Edit",
+                showDetails: "Show details",
+                hideDetails: "Hide details",
+                method: "The Eisenhower Method:",
+                selfManagement: "Self-management tips:",
+                tip1: "Start each day by reviewing your Q1 tasks",
+                tip2: "Regularly schedule time for Q2 tasks",
+                tip3: "Weekly check if Q3 tasks are really necessary",
+                tip4: "Critically question Q4 tasks and delete regularly",
+                tip5: "Keep the number of tasks per quadrant manageable",
+                privacy: "Privacy",
+                privacyTitle: "Privacy Information",
+                privacyText: "This app stores all your data exclusively on your device. No data is sent to or stored on any external servers. Your task information remains completely private and is saved in your browser's local storage. You can clear this data at any time by clearing your browser's storage or by using the browser's developer tools.",
+                close: "Close",
+                overdue: "Overdue",
+                days: "days"
+            }
+        };
+
+        // Funktion um die aktuelle Sprache zu erhalten
+        function getCurrentLanguage() {
+            let userLang = navigator.language || navigator.userLanguage || 'en';
+            // Hauptsprache extrahieren
+            userLang = userLang.split('-')[0].toLowerCase();
+            // Fallback auf Englisch
+            return translations[userLang] ? userLang : 'en';
+        }
+
+        // Aktueller Sprachcode
+        const currentLang = getCurrentLanguage();
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Debug: Sprache ausgeben
+            console.log('Erkannte Sprache:', currentLang);
+
+            // Spracheinstellung anwenden
+            const t = translations[currentLang];
+
+            // Alle Texte in der UI aktualisieren
+            document.querySelector('h1').textContent = t.title;
+            document.querySelector('.subtitle').textContent = t.subtitle;
+
+            // Quadranten-Überschriften
+            document.querySelectorAll('.quadrant-header h2')[0].textContent = t.q1Title;
+            document.querySelectorAll('.quadrant-header h2')[1].textContent = t.q2Title;
+            document.querySelectorAll('.quadrant-header h2')[2].textContent = t.q3Title;
+            document.querySelectorAll('.quadrant-header h2')[3].textContent = t.q4Title;
+
+            // Quadranten-Labels
+            document.querySelectorAll('.quadrant-label')[0].textContent = t.q1Label;
+            document.querySelectorAll('.quadrant-label')[1].textContent = t.q2Label;
+            document.querySelectorAll('.quadrant-label')[2].textContent = t.q3Label;
+            document.querySelectorAll('.quadrant-label')[3].textContent = t.q4Label;
+
+            // Modal
+            document.querySelector('.modal-header h3').textContent = t.addTask;
+            document.querySelector('label[for="task-description"]').textContent = t.taskDescription;
+            document.getElementById('task-description').placeholder = t.taskPlaceholder;
+            document.querySelector('label[for="task-details"]').textContent = t.taskDetails;
+            document.getElementById('task-details').placeholder = t.taskDetailsPlaceholder;
+
+            document.querySelectorAll('.radio-group > label')[0].textContent = t.isImportant;
+            document.querySelectorAll('.radio-group > label')[1].textContent = t.isUrgent;
+
+            document.querySelectorAll('.radio-label')[0].lastChild.textContent = `${t.yes}, ${t.important}`;
+            document.querySelectorAll('.radio-label')[1].lastChild.textContent = `${t.no}, ${t.notImportant}`;
+            document.querySelectorAll('.radio-label')[2].lastChild.textContent = `${t.yes}, ${t.urgent}`;
+            document.querySelectorAll('.radio-label')[3].lastChild.textContent = `${t.no}, ${t.notUrgent}`;
+
+            document.getElementById('cancel-btn').textContent = t.cancel;
+            document.querySelector('.btn-primary').textContent = t.add;
+
+            // Info-Tooltip
+            document.getElementById('info-tooltip').innerHTML = `
+                <h4>${t.method}</h4>
+                <p><span style="color: var(--color-q1-bg); font-weight: bold;">Q1:</span> ${t.q1Label}</p>
+                <p><span style="color: var(--color-q2-bg); font-weight: bold;">Q2:</span> ${t.q2Label}</p>
+                <p><span style="color: var(--color-q3-bg); font-weight: bold;">Q3:</span> ${t.q3Label}</p>
+                <p><span style="color: var(--color-q4-bg); font-weight: bold;">Q4:</span> ${t.q4Label}</p>
+
+                <hr style="margin: 12px 0; border-color: #eee;">
+
+                <h4>${t.selfManagement}</h4>
+                <ol style="padding-left: 18px; margin-top: 8px;">
+                    <li>${t.tip1}</li>
+                    <li>${t.tip2}</li>
+                    <li>${t.tip3}</li>
+                    <li>${t.tip4}</li>
+                    <li>${t.tip5}</li>
+                </ol>
+            `;
+
+            // DOM-Elemente
+            const addTaskBtn = document.getElementById('add-task-btn');
+            const taskModal = document.getElementById('task-modal');
+            const modalTitle = document.getElementById('modal-title');
+            const submitBtn = document.getElementById('submit-btn');
+            const cancelBtn = document.getElementById('cancel-btn');
+            const taskForm = document.getElementById('task-form');
+            const infoBtn = document.getElementById('info-btn');
+            const infoTooltip = document.getElementById('info-tooltip');
+            const privacyBtn = document.getElementById('privacy-btn');
+            const privacyModal = document.getElementById('privacy-modal');
+            const closePrivacyBtn = document.getElementById('close-privacy-btn');
+
+            // Privacy-Modal Texte aktualisieren
+            document.getElementById('privacy-title').textContent = t.privacyTitle;
+            document.getElementById('privacy-text').textContent = t.privacyText;
+            closePrivacyBtn.textContent = t.close;
+            privacyBtn.title = t.privacy;
+
+            // Aufgaben laden
+            loadTasks();
+
+            // Drag & Drop einrichten
+            setupDragAndDrop();
+
+            // Event-Listener für das Schließen aktiver Dropdown-Menüs
+            document.addEventListener('click', function(e) {
+                // Wenn der Klick außerhalb eines Dropdown-Menüs erfolgt
+                if (!e.target.closest('.menu-trigger') && !e.target.closest('.dropdown-menu')) {
+                    // Alle aktiven Dropdown-Menüs schließen
+                    document.querySelectorAll('.dropdown-menu.active').forEach(menu => {
+                        menu.classList.remove('active');
+                    });
+                }
+            });
+
+            // EVENT LISTENERS
+
+            // 1. Task hinzufügen Modal
+            addTaskBtn.addEventListener('click', () => {
+                resetTaskForm();
+                modalTitle.textContent = t.addTask;
+                submitBtn.textContent = t.add;
+                taskModal.classList.add('active');
+                document.getElementById('task-description').focus();
+            });
+
+            cancelBtn.addEventListener('click', () => {
+                taskModal.classList.remove('active');
+                resetTaskForm();
+            });
+
+            taskModal.addEventListener('click', (e) => {
+                if (e.target === taskModal) {
+                    taskModal.classList.remove('active');
+                    resetTaskForm();
+                }
+            });
+
+            // 2. Info-Tooltip
+            infoBtn.addEventListener('mouseenter', () => {
+                infoTooltip.style.display = 'block';
+            });
+
+            infoBtn.addEventListener('mouseleave', () => {
+                infoTooltip.style.display = 'none';
+            });
+
+            // 3. Datenschutz-Modal
+            privacyBtn.addEventListener('click', () => {
+                privacyModal.classList.add('active');
+            });
+
+            closePrivacyBtn.addEventListener('click', () => {
+                privacyModal.classList.remove('active');
+            });
+
+            privacyModal.addEventListener('click', (e) => {
+                if (e.target === privacyModal) {
+                    privacyModal.classList.remove('active');
+                }
+            });
+
+            // 4. Formular zum Hinzufügen/Bearbeiten einer Aufgabe
+            taskForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                // Formularwerte abrufen
+                const taskId = document.getElementById('task-id').value;
+                const description = document.getElementById('task-description').value.trim();
+                const importanceElements = document.getElementsByName('importance');
+                const urgencyElements = document.getElementsByName('urgency');
+
+                let importance = '';
+                let urgency = '';
+
+                for (const radio of importanceElements) {
+                    if (radio.checked) {
+                        importance = radio.value;
+                        break;
+                    }
+                }
+
+                for (const radio of urgencyElements) {
+                    if (radio.checked) {
+                        urgency = radio.value;
+                        break;
+                    }
+                }
+
+                if (description && importance && urgency) {
+                    // Quadrant bestimmen
+                    let quadrant;
+                    if (importance === 'important' && urgency === 'urgent') {
+                        quadrant = 1;
+                    } else if (importance === 'important' && urgency === 'not-urgent') {
+                        quadrant = 2;
+                    } else if (importance === 'not-important' && urgency === 'urgent') {
+                        quadrant = 3;
+                    } else {
+                        quadrant = 4;
+                    }
+
+                    if (taskId) {
+                        // Aufgabe bearbeiten
+                        updateTask(taskId, description, quadrant, importance, urgency);
+                    } else {
+                        // Neue Aufgabe hinzufügen
+                        addTask(description, quadrant, importance, urgency);
+                    }
+
+                    // Modal schließen und Formular zurücksetzen
+                    taskModal.classList.remove('active');
+                    resetTaskForm();
+                }
+            });
+
+            // 5. Event-Delegation für Menü-Aktionen (Edit und Delete)
+            document.addEventListener('click', function(e) {
+                // Menü-Trigger
+                if (e.target.closest('.menu-trigger')) {
+                    e.stopPropagation();
+                    const menuTrigger = e.target.closest('.menu-trigger');
+                    const taskItem = menuTrigger.closest('.task-item');
+                    const dropdown = taskItem.querySelector('.dropdown-menu');
+
+                    // Alle anderen aktiven Menüs schließen
+                    document.querySelectorAll('.dropdown-menu.active').forEach(menu => {
+                        if (menu !== dropdown) {
+                            menu.classList.remove('active');
+                        }
+                    });
+
+                    // Toggle des aktuellen Menüs
+                    dropdown.classList.toggle('active');
+                }
+
+                // Edit-Option
+                if (e.target.closest('.edit-task')) {
+                    e.stopPropagation();
+                    const taskItem = e.target.closest('.task-item');
+                    const taskId = taskItem.dataset.id;
+                    editTask(taskId);
+
+                    // Dropdown-Menü schließen
+                    const dropdown = taskItem.querySelector('.dropdown-menu');
+                    if (dropdown) {
+                        dropdown.classList.remove('active');
+                    }
+                }
+
+                // Delete-Option
+                if (e.target.closest('.delete-task')) {
+                    e.stopPropagation();
+                    const taskItem = e.target.closest('.task-item');
+                    const taskId = taskItem.dataset.id;
+                    deleteTask(taskId);
+                }
+            });
+
+            // Funktion zum Zurücksetzen des Formulars
+            function resetTaskForm() {
+                document.getElementById('task-id').value = '';
+                document.getElementById('task-description').value = '';
+                document.getElementById('task-details').value = '';
+
+                // Radio-Buttons zurücksetzen
+                document.querySelectorAll('input[type="radio"]').forEach(radio => {
+                    radio.checked = false;
+                });
+
+                // Modal-Titel und Submit-Button Text zurücksetzen
+                document.getElementById('modal-title').textContent = t.addTask;
+                document.getElementById('submit-btn').textContent = t.add;
+            }
+
+            // Funktion zum Laden einer Aufgabe zum Bearbeiten
+            function editTask(taskId) {
+                const tasks = JSON.parse(localStorage.getItem('eisenhowerTasks')) || [];
+                const task = tasks.find(t => t.id === taskId);
+
+                if (task) {
+                    // Formular mit Aufgabendaten füllen
+                    document.getElementById('task-id').value = task.id;
+                    document.getElementById('task-description').value = task.description;
+                    document.getElementById('task-details').value = task.details || '';
+
+                    // Importance setzen
+                    if (task.importance === 'important') {
+                        document.querySelector('input[name="importance"][value="important"]').checked = true;
+                    } else {
+                        document.querySelector('input[name="importance"][value="not-important"]').checked = true;
+                    }
+
+                    // Urgency setzen
+                    if (task.urgency === 'urgent') {
+                        document.querySelector('input[name="urgency"][value="urgent"]').checked = true;
+                    } else {
+                        document.querySelector('input[name="urgency"][value="not-urgent"]').checked = true;
+                    }
+
+                    // Modal-Titel und Submit-Button Text aktualisieren
+                    document.getElementById('modal-title').textContent = t.editTask;
+                    document.getElementById('submit-btn').textContent = t.update;
+
+                    // Modal öffnen
+                    taskModal.classList.add('active');
+                    document.getElementById('task-description').focus();
+                }
+            }
+        });
+
+        // Drag & Drop-Funktionalität einrichten
+        function setupDragAndDrop() {
+            // Globale Event-Listener für Drag & Drop
+            document.addEventListener('dragstart', function(e) {
+                if (e.target.classList.contains('task-item')) {
+                    e.target.classList.add('dragging');
+                    e.dataTransfer.setData('text/plain', e.target.dataset.id);
+                    e.dataTransfer.effectAllowed = 'move';
+                }
+            });
+
+            document.addEventListener('dragend', function(e) {
+                if (e.target.classList.contains('task-item')) {
+                    e.target.classList.remove('dragging');
+                }
+            });
+
+            // Einrichten der Drop-Zonen für alle Quadranten
+            for (let i = 1; i <= 4; i++) {
+                const quadrantContent = document.getElementById(`quadrant${i}`);
+
+                quadrantContent.addEventListener('dragover', function(e) {
+                    e.preventDefault(); // Erlaubt das Droppen
+                    this.classList.add('drag-over');
+                });
+
+                quadrantContent.addEventListener('dragleave', function() {
+                    this.classList.remove('drag-over');
+                });
+
+                quadrantContent.addEventListener('drop', function(e) {
+                    e.preventDefault();
+                    this.classList.remove('drag-over');
+
+                    const taskId = e.dataTransfer.getData('text/plain');
+                    const quadrantNumber = parseInt(this.id.replace('quadrant', ''));
+
+                    moveTaskToQuadrant(taskId, quadrantNumber);
+                });
+            }
+        }
+
+        // Alle Aufgaben laden
+        function loadTasks() {
+            const tasks = JSON.parse(localStorage.getItem('eisenhowerTasks')) || [];
+
+            // Listen leeren
+            for (let i = 1; i <= 4; i++) {
+                document.getElementById(`tasks-q${i}`).innerHTML = '';
+            }
+
+            // Nach Erstellungsdatum sortieren (neueste zuerst)
+            tasks.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+            // Aufgaben in entsprechende Quadranten einfügen
+            tasks.forEach(task => {
+                const taskList = document.getElementById(`tasks-q${task.quadrant}`);
+                const taskElement = createTaskElement(task);
+                taskList.appendChild(taskElement);
+            });
+
+            // Leere Nachrichten anzeigen
+            checkEmptyQuadrants();
+        }
+
+        // Neue Aufgabe hinzufügen
+        function addTask(description, quadrant, importance, urgency) {
+            const tasks = JSON.parse(localStorage.getItem('eisenhowerTasks')) || [];
+
+                            // Details holen
+                const details = document.getElementById('task-details').value.trim();
+
+                // Neue Aufgabe erstellen
+                const newTask = {
+                    id: Date.now().toString(),
+                    description: description,
+                    details: details,
+                    quadrant: quadrant,
+                    importance: importance,
+                    urgency: urgency,
+                    createdAt: new Date().toISOString()
+                };
+
+            // Zu Liste hinzufügen
+            tasks.push(newTask);
+
+            // Im localStorage speichern
+            localStorage.setItem('eisenhowerTasks', JSON.stringify(tasks));
+
+            // Im DOM anzeigen
+            const taskList = document.getElementById(`tasks-q${quadrant}`);
+            const taskElement = createTaskElement(newTask);
+
+            // An den Anfang der Liste hinzufügen
+            if (taskList.firstChild) {
+                taskList.insertBefore(taskElement, taskList.firstChild);
+            } else {
+                taskList.appendChild(taskElement);
+            }
+
+            // Leere Nachrichten aktualisieren
+            checkEmptyQuadrants();
+        }
+
+        // Aufgabe aktualisieren
+        function updateTask(taskId, description, quadrant, importance, urgency) {
+            let tasks = JSON.parse(localStorage.getItem('eisenhowerTasks')) || [];
+            const taskIndex = tasks.findIndex(task => task.id === taskId);
+
+            if (taskIndex !== -1) {
+                const oldQuadrant = tasks[taskIndex].quadrant;
+
+                // Details holen
+                const details = document.getElementById('task-details').value.trim();
+
+                // Aufgabe aktualisieren
+                tasks[taskIndex].description = description;
+                tasks[taskIndex].details = details;
+                tasks[taskIndex].quadrant = quadrant;
+                tasks[taskIndex].importance = importance;
+                tasks[taskIndex].urgency = urgency;
+
+                // Im localStorage speichern
+                localStorage.setItem('eisenhowerTasks', JSON.stringify(tasks));
+
+                // Aufgabe aus altem Quadranten entfernen (falls geändert)
+                if (oldQuadrant !== quadrant) {
+                    const oldTaskElement = document.querySelector(`.task-item[data-id="${taskId}"]`);
+                    if (oldTaskElement) {
+                        oldTaskElement.remove();
+                    }
+
+                    // Aufgabe im neuen Quadranten anzeigen
+                    const taskList = document.getElementById(`tasks-q${quadrant}`);
+                    const taskElement = createTaskElement(tasks[taskIndex]);
+
+                    if (taskList.firstChild) {
+                        taskList.insertBefore(taskElement, taskList.firstChild);
+                    } else {
+                        taskList.appendChild(taskElement);
+                    }
+                } else {
+                    // Nur Anzeige aktualisieren
+                    const taskElement = document.querySelector(`.task-item[data-id="${taskId}"]`);
+                    if (taskElement) {
+                        taskElement.querySelector('.task-content').textContent = description;
+                    }
+                }
+
+                // Leere Nachrichten aktualisieren
+                checkEmptyQuadrants();
+            }
+        }
+
+        // Aufgabe löschen
+        function deleteTask(taskId) {
+            let tasks = JSON.parse(localStorage.getItem('eisenhowerTasks')) || [];
+
+            // Aus der Liste entfernen
+            tasks = tasks.filter(task => task.id !== taskId);
+
+            // Im localStorage aktualisieren
+            localStorage.setItem('eisenhowerTasks', JSON.stringify(tasks));
+
+            // Aus DOM entfernen
+            const taskElement = document.querySelector(`.task-item[data-id="${taskId}"]`);
+            if (taskElement) {
+                // Animation hinzufügen
+                taskElement.style.opacity = '0';
+                taskElement.style.transform = 'translateX(20px)';
+                setTimeout(() => {
+                    taskElement.remove();
+                    // Leere Nachrichten überprüfen
+                    checkEmptyQuadrants();
+                }, 300);
+            }
+        }
+
+        // Task in einen neuen Quadranten verschieben
+        function moveTaskToQuadrant(taskId, newQuadrant) {
+            let tasks = JSON.parse(localStorage.getItem('eisenhowerTasks')) || [];
+
+            // Finde die Aufgabe
+            const taskIndex = tasks.findIndex(task => task.id === taskId);
+
+            if (taskIndex !== -1) {
+                const task = tasks[taskIndex];
+                const oldQuadrant = task.quadrant;
+
+                // Wenn der Quadrant sich nicht ändert, nichts tun
+                if (oldQuadrant === newQuadrant) {
+                    return;
+                }
+
+                // Aktualisieren der Importance und Urgency basierend auf dem neuen Quadranten
+                switch (newQuadrant) {
+                    case 1: // Wichtig & Dringend
+                        task.importance = 'important';
+                        task.urgency = 'urgent';
+                        break;
+                    case 2: // Wichtig & Nicht Dringend
+                        task.importance = 'important';
+                        task.urgency = 'not-urgent';
+                        break;
+                    case 3: // Nicht Wichtig & Dringend
+                        task.importance = 'not-important';
+                        task.urgency = 'urgent';
+                        break;
+                    case 4: // Nicht Wichtig & Nicht Dringend
+                        task.importance = 'not-important';
+                        task.urgency = 'not-urgent';
+                        break;
+                }
+
+                // Quadrant aktualisieren
+                task.quadrant = newQuadrant;
+
+                // Tasks im localStorage aktualisieren
+                localStorage.setItem('eisenhowerTasks', JSON.stringify(tasks));
+
+                // Entferne die Task aus dem alten Quadranten
+                const oldTaskElement = document.querySelector(`.task-item[data-id="${taskId}"]`);
+                if (oldTaskElement) {
+                    oldTaskElement.remove();
+                }
+
+                // Füge die Task zum neuen Quadranten hinzu
+                const taskList = document.getElementById(`tasks-q${newQuadrant}`);
+                const newTaskElement = createTaskElement(task);
+
+                // An den Anfang der Liste hinzufügen
+                if (taskList.firstChild) {
+                    taskList.insertBefore(newTaskElement, taskList.firstChild);
+                } else {
+                    taskList.appendChild(newTaskElement);
+                }
+
+                // Leere Nachrichten aktualisieren
+                checkEmptyQuadrants();
+            }
+        }
+
+
+        // DOM-Element für eine Aufgabe erstellen (mit Dropdown-Menü)
+        function createTaskElement(task) {
+    // Übersetzungen laden
+    const t = translations[currentLang];
+
+    // Quadrant-spezifische Klassen
+    let taskClass;
+
+    switch(task.quadrant) {
+        case 1: taskClass = 'q1-task'; break;
+        case 2: taskClass = 'q2-task'; break;
+        case 3: taskClass = 'q3-task'; break;
+        case 4: taskClass = 'q4-task'; break;
+    }
+
+    const li = document.createElement('li');
+    li.className = `task-item ${taskClass}`;
+    li.dataset.id = task.id;
+    li.draggable = true;
+
+    const textDiv = document.createElement('div');
+    textDiv.className = 'task-content';
+
+    const titleDiv = document.createElement('div');
+    titleDiv.className = 'task-title';
+
+    // Den reinen Text in einem Span unterbringen
+    const titleText = document.createElement('span');
+    titleText.textContent = task.description;
+    titleDiv.appendChild(titleText);
+    
+    // Überfälligkeitsindikator hinzufügen, wenn die Aufgabe überfällig ist
+    if (task.overdue) {
+        const overdueIndicator = document.createElement('span');
+        overdueIndicator.className = 'overdue-indicator';
+        const daysOverdue = task.overdueMessage ? 
+            task.overdueMessage.match(/\d+/)[0] : 
+            '?';
+        overdueIndicator.innerHTML = ` <i class="fas fa-exclamation-circle"></i> ${t.overdue || 'Überfällig'}: ${daysOverdue} ${t.days || 'Tage'}`;
+        titleDiv.appendChild(overdueIndicator);
+    }
+
+    // Details-Toggle erstellen, wenn Details vorhanden sind
+    if (task.details && task.details.trim() !== '') {
+        const detailsToggle = document.createElement('button');
+        detailsToggle.className = 'details-toggle';
+        detailsToggle.innerHTML = '<i class="fas fa-chevron-down"></i>';
+        
+        detailsToggle.addEventListener('click', function(e) {
+            e.stopPropagation();  // Verhindert Drag & Drop beim Klicken auf den Toggle
+            const detailsDiv = li.querySelector('.task-details');
+            const isVisible = detailsDiv.style.display === 'block';
+
+            detailsDiv.style.display = isVisible ? 'none' : 'block';
+            this.innerHTML = isVisible ? 
+                '<i class="fas fa-chevron-down"></i>' : 
+                '<i class="fas fa-chevron-up"></i>';
+        });
+
+        titleDiv.appendChild(detailsToggle);
+    }
+
+    textDiv.appendChild(titleDiv);
+
+    // Details-Container separat hinzufügen, wenn vorhanden
+    if (task.details && task.details.trim() !== '') {
+        const detailsDiv = document.createElement('div');
+        detailsDiv.className = 'task-details';
+        detailsDiv.textContent = task.details;
+        detailsDiv.style.display = 'none';  // Initially hidden
+        textDiv.appendChild(detailsDiv);
+    }
+
+    // Drei-Punkte-Menü erstellen
+    const actionsDiv = document.createElement('div');
+    actionsDiv.className = 'task-actions';
+
+    const menuButton = document.createElement('button');
+    menuButton.className = 'menu-trigger';
+    menuButton.innerHTML = '<i class="fas fa-ellipsis-v"></i>';
+
+    const dropdownMenu = document.createElement('div');
+    dropdownMenu.className = 'dropdown-menu';
+
+    // Edit-Option
+    const editOption = document.createElement('div');
+    editOption.className = 'dropdown-item edit-task';
+    editOption.innerHTML = `<i class="fas fa-edit"></i> ${t.edit}`;
+
+    // Delete-Option
+    const deleteOption = document.createElement('div');
+    deleteOption.className = 'dropdown-item delete-task';
+    deleteOption.innerHTML = `<i class="fas fa-trash-alt"></i> ${t.delete}`;
+
+    // Zusammenbauen des Dropdown-Menüs
+    dropdownMenu.appendChild(editOption);
+    dropdownMenu.appendChild(deleteOption);
+    actionsDiv.appendChild(menuButton);
+    actionsDiv.appendChild(dropdownMenu);
+
+    li.appendChild(textDiv);
+    li.appendChild(actionsDiv);
+
+    return li;
+}
+
+// Leere Quadranten prüfen
+        function checkEmptyQuadrants() {
+            // Übersetzungen laden
+            const t = translations[currentLang];
+
+            for (let i = 1; i <= 4; i++) {
+                const taskList = document.getElementById(`tasks-q${i}`);
+
+                // Vorhandene Nachricht entfernen
+                const existingMessage = taskList.querySelector('.empty-message');
+                if (existingMessage) {
+                    existingMessage.remove();
+                }
+
+                // Wenn keine Aufgaben vorhanden, Nachricht anzeigen
+                if (taskList.childElementCount === 0) {
+                    const emptyMessage = document.createElement('div');
+                    emptyMessage.className = 'empty-message';
+
+                    const icon = document.createElement('i');
+                    icon.className = 'fas fa-inbox';
+
+                    const text = document.createElement('p');
+                    text.textContent = t.emptyQuadrant;
+
+                    emptyMessage.appendChild(icon);
+                    emptyMessage.appendChild(text);
+                    taskList.appendChild(emptyMessage);
+                }
+            }
+        }
+
+        // Funktion zur Überprüfung des Task-Alters
+        function checkTaskAge() {
+            let tasks = JSON.parse(localStorage.getItem('eisenhowerTasks')) || [];
+            const now = new Date();
+            let tasksUpdated = false;
+
+            tasks.forEach(task => {
+                const createdDate = new Date(task.createdAt);
+                const daysSinceCreation = Math.floor((now - createdDate) / (1000 * 60 * 60 * 24));
+
+                // Zeitlimits pro Quadrant
+                let ageLimit;
+                switch(task.quadrant) {
+                    case 1: ageLimit = 2; break;  // 2 Tage für Q1
+                    case 2: ageLimit = 14; break; // 14 Tage für Q2
+                    case 3: ageLimit = 5; break;  // 5 Tage für Q3
+                    case 4: ageLimit = 30; break; // 30 Tage für Q4
+                }
+
+                // Überfälligkeitsstatus hinzufügen
+                if (daysSinceCreation > ageLimit) {
+                    task.overdue = true;
+                    task.overdueMessage = `Aufgabe überfällig seit ${daysSinceCreation} Tagen`;
+                    tasksUpdated = true;
+                } else {
+                    task.overdue = false;
+                    delete task.overdueMessage;
+                }
+            });
+
+            // Nur speichern, wenn Änderungen vorgenommen wurden
+            if (tasksUpdated) {
+                localStorage.setItem('eisenhowerTasks', JSON.stringify(tasks));
+            }
+
+            // Aufgaben neu laden, um Überfälligkeiten zu zeigen
+            loadTasks();
+        }
+
+        // Regelmäßige Überprüfung beim Laden der Seite und dann täglich
+        document.addEventListener('DOMContentLoaded', checkTaskAge);
+        setInterval(checkTaskAge, 24 * 60 * 60 * 1000); // Täglich
+        // CSS für den Überfälligkeitsindikator
+        const overdueStyle = document.createElement('style');
+        overdueStyle.textContent = `
+            .overdue-indicator {
+                display: inline-block;
+                background-color: rgba(255, 255, 255, 0.2);
+                border-radius: 4px;
+                padding: 2px 6px;
+                margin-left: 8px;
+                font-size: 0.75rem;
+                color: white;
+            }
+            
+            .overdue-indicator i {
+                color: #fef08a;
+                margin-right: 4px;
+            }
+        `;
+        document.head.appendChild(overdueStyle);
+    </script>
+</body>
+</html>

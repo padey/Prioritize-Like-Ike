@@ -1,0 +1,29 @@
+:root {
+    /* Quadrant 1: Dunkles Grau mit kräftigem Purple-Akzent */
+    --color-q1-bg: #2a2a3c;
+    --color-q1-header: #1f1f2c;
+    --color-q1-card: #3f3f56;
+    --color-q1-card-hover: #52526e;
+    
+    /* Quadrant 2: Mittleres Grau mit leuchtendem Purple */
+    --color-q2-bg: #7c3aed;
+    --color-q2-header: #6d28d9;
+    --color-q2-card: #8b5cf6;
+    --color-q2-card-hover: #a78bfa;
+    
+    /* Quadrant 3: Helles Grau mit Purple-Schimmer */
+    --color-q3-bg: #4b5563;
+    --color-q3-header: #374151;
+    --color-q3-card: #6b7280;
+    --color-q3-card-hover: #9ca3af;
+    
+    /* Quadrant 4: Sehr helles Grau mit Lila-Unterton */
+    --color-q4-bg: #a78bfa;
+    --color-q4-header: #9333ea;
+    --color-q4-card: #c4b5fd;
+    --color-q4-card-hover: #ddd6fe;
+    
+    /* Primärfarbe für Buttons und Akzente */
+    --color-primary: #8b5cf6;
+    --color-primary-hover: #7c3aed;
+}
