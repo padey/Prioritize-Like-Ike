@@ -3,6 +3,9 @@
 
 A modern, privacy-friendly Eisenhower Matrix app to help you organize and prioritize your tasks by importance and urgency.
 
+![image](https://github.com/user-attachments/assets/e6829450-b251-434b-8391-5584f2461a36)
+
+
 ## Features
 
 - Four quadrants: Important & Urgent, Important & Not Urgent, Not Important & Urgent, Not Important & Not Urgent
