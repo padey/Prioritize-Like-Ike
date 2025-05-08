@@ -17,10 +17,15 @@ A modern, privacy-friendly Eisenhower Matrix app to help you organize and priori
 
 ## Usage
 
-1. Open `index.html` in your browser.
+1. Download / Clone Repo and open `index.html` in your browser.
 2. Add tasks using the "+" button.
 3. Organize tasks by dragging them between quadrants.
 4. Click the info or privacy buttons for tips and FAQ.
+
+## Usage github.io
+
+1. Open https://padey.github.io/Prioritize-Like-Ike/
+2. Add tasks :)
 
 ## Privacy
 
