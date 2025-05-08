@@ -3,7 +3,7 @@
 
 A modern, privacy-friendly Eisenhower Matrix app to help you organize and prioritize your tasks by importance and urgency.
 
-![image](https://github.com/user-attachments/assets/e6829450-b251-434b-8391-5584f2461a36)
+![image](https://github.com/user-attachments/assets/d4c0c680-f104-4369-b64f-e6f828f2dd83)
 
 
 ## Features
