@@ -8,6 +8,133 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
     <link rel=stylesheet type="text/css" href="eisenhower.css">
     <link rel=stylesheet type="text/css" href="root.css">
+    <style>
+        .overdue-indicator {
+            display: inline-block;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+            padding: 2px 6px;
+            margin-left: 8px;
+            font-size: 0.75rem;
+            color: white;
+        }
+        
+        .overdue-indicator i {
+            color: #fef08a;
+            margin-right: 4px;
+        }
+
+        /* Export/Import Button Styles */
+        .export-btn {
+            position: fixed;
+            bottom: 1.5rem;
+            right: 5rem;
+            width: 3rem;
+            height: 3rem;
+            border-radius: 50%;
+            background-color: var(--color-primary);
+            color: white;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: transform 0.2s, background-color 0.2s;
+            z-index: 1000;
+        }
+
+        .export-btn:hover {
+            transform: scale(1.1);
+            background-color: var(--color-primary-dark);
+        }
+
+        #import-btn {
+            right: 9rem;
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 4px;
+            z-index: 2000;
+            display: none;
+            animation: fadeInOut 3s ease-in-out;
+        }
+
+        @keyframes fadeInOut {
+            0% { opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+
+        /* Privacy Button Styles */
+        .privacy-btn {
+            position: fixed;
+            bottom: 1.5rem;
+            width: 3rem;
+            height: 3rem;
+            border-radius: 50%;
+            background-color: var(--color-primary);
+            color: white;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: all 0.2s ease;
+            z-index: 1000;
+        }
+
+        .privacy-btn:hover {
+            transform: scale(1.05);
+            background-color: var(--color-primary-dark);
+            box-shadow: 0 3px 6px rgba(0,0,0,0.25);
+        }
+
+        /* Add Task Button Style */
+        .add-task-btn {
+            position: fixed;
+            bottom: 1.5rem;
+            right: 1.5rem;
+            width: 4rem;
+            height: 4rem;
+            border-radius: 50%;
+            background-color: var(--color-primary);
+            color: white;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            transition: all 0.2s ease;
+            z-index: 1000;
+            font-size: 1.5rem;
+        }
+
+        .add-task-btn:hover {
+            transform: scale(1.1);
+            background-color: var(--color-primary-dark);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+        }
+
+        .export-btn {
+            right: 5.5rem;
+        }
+
+        .import-btn {
+            right: 9.5rem;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -65,7 +192,7 @@
 
         <!-- Hinzufügen Button (feste Position) -->
         <div class="add-task-container">
-            <button id="add-task-btn" class="add-task-btn">
+            <button id="add-task-btn" class="add-task-btn" aria-label="Neue Aufgabe hinzufügen">
                 <i class="fas fa-plus"></i>
             </button>
         </div>
@@ -100,6 +227,15 @@
         <button id="privacy-btn" class="privacy-btn" title="Datenschutz">
             <i class="fa fa-question"></i>
         </button>
+
+        <!-- Export/Import Buttons -->
+        <button id="export-btn" class="privacy-btn export-btn" title="Aufgaben exportieren">
+            <i class="fas fa-download"></i>
+        </button>
+        <button id="import-btn" class="privacy-btn import-btn" title="Aufgaben importieren">
+            <i class="fas fa-upload"></i>
+        </button>
+        <input type="file" id="import-file" accept=".json" style="display: none;">
 
         <!-- Privacy Modal -->
         <div id="privacy-modal" class="privacy-modal">
@@ -207,6 +343,9 @@
             </div>
         </div>
     </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
 
     <script>
         // Sprachinhalte
@@ -326,6 +465,100 @@
             // Spracheinstellung anwenden
             const t = translations[currentLang];
 
+            // DOM-Elemente
+            const addTaskBtn = document.getElementById('add-task-btn');
+            const exportBtn = document.getElementById('export-btn');
+            const importBtn = document.getElementById('import-btn');
+            const importFile = document.getElementById('import-file');
+            const toast = document.getElementById('toast');
+            const taskModal = document.getElementById('task-modal');
+            const modalTitle = document.getElementById('modal-title');
+            const submitBtn = document.getElementById('submit-btn');
+            const cancelBtn = document.getElementById('cancel-btn');
+            const taskForm = document.getElementById('task-form');
+            const infoBtn = document.getElementById('info-btn');
+            const infoTooltip = document.getElementById('info-tooltip');
+            const privacyBtn = document.getElementById('privacy-btn');
+            const privacyModal = document.getElementById('privacy-modal');
+            const closePrivacyBtn = document.getElementById('close-privacy-btn');
+
+            // Toast-Funktion
+            function showToast(message, duration = 3000) {
+                toast.textContent = message;
+                toast.style.display = 'block';
+                setTimeout(() => {
+                    toast.style.display = 'none';
+                }, duration);
+            }
+
+            // Export-Funktion
+            exportBtn.addEventListener('click', () => {
+                try {
+                    const tasks = JSON.parse(localStorage.getItem('eisenhowerTasks')) || [];
+                    const dataStr = JSON.stringify(tasks, null, 2);
+                    const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+                    
+                    const exportFileDefaultName = `eisenhower-tasks-${new Date().toISOString().split('T')[0]}.json`;
+                    
+                    const linkElement = document.createElement('a');
+                    linkElement.setAttribute('href', dataUri);
+                    linkElement.setAttribute('download', exportFileDefaultName);
+                    linkElement.click();
+                    
+                    showToast('Aufgaben erfolgreich exportiert');
+                } catch (error) {
+                    console.error('Export fehlgeschlagen:', error);
+                    showToast('Export fehlgeschlagen');
+                }
+            });
+
+            // Import-Funktion
+            importBtn.addEventListener('click', () => {
+                importFile.click();
+            });
+
+            importFile.addEventListener('change', (event) => {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        try {
+                            const importedTasks = JSON.parse(e.target.result);
+                            
+                            // Validierung der importierten Daten
+                            if (!Array.isArray(importedTasks)) {
+                                throw new Error('Ungültiges Datenformat');
+                            }
+
+                            // Überprüfen der Task-Struktur
+                            const isValidTask = (task) => {
+                                return task && 
+                                       typeof task.id === 'string' &&
+                                       typeof task.description === 'string' &&
+                                       typeof task.quadrant === 'number' &&
+                                       typeof task.importance === 'string' &&
+                                       typeof task.urgency === 'string';
+                            };
+
+                            if (!importedTasks.every(isValidTask)) {
+                                throw new Error('Ungültige Task-Struktur');
+                            }
+
+                            // Bestehende Tasks mit importierten Tasks ersetzen
+                            localStorage.setItem('eisenhowerTasks', JSON.stringify(importedTasks));
+                            
+                            // UI aktualisieren
+                            loadTasks();
+                            showToast('Aufgaben erfolgreich importiert');
+                        } catch (error) {
+                            console.error('Import fehlgeschlagen:', error);
+                            showToast('Import fehlgeschlagen: ' + error.message);
+                        }
+                    };
+                    reader.readAsText(file);
+                }
+            });
+
             // Alle Texte in der UI aktualisieren
             document.querySelector('h1').textContent = t.title;
             document.querySelector('.subtitle').textContent = t.subtitle;
@@ -379,25 +612,6 @@
                     <li>${t.tip5}</li>
                 </ol>
             `;
-
-            // DOM-Elemente
-            const addTaskBtn = document.getElementById('add-task-btn');
-            const taskModal = document.getElementById('task-modal');
-            const modalTitle = document.getElementById('modal-title');
-            const submitBtn = document.getElementById('submit-btn');
-            const cancelBtn = document.getElementById('cancel-btn');
-            const taskForm = document.getElementById('task-form');
-            const infoBtn = document.getElementById('info-btn');
-            const infoTooltip = document.getElementById('info-tooltip');
-            const privacyBtn = document.getElementById('privacy-btn');
-            const privacyModal = document.getElementById('privacy-modal');
-            const closePrivacyBtn = document.getElementById('close-privacy-btn');
-
-            // Privacy-Modal Texte aktualisieren
-            document.getElementById('privacy-title').textContent = t.privacyTitle;
-            document.getElementById('privacy-text').textContent = t.privacyText;
-            closePrivacyBtn.textContent = t.close;
-            privacyBtn.title = t.privacy;
 
             // Aufgaben laden
             loadTasks();
@@ -610,6 +824,12 @@
                     document.getElementById('task-description').focus();
                 }
             }
+
+            // Privacy-Modal Texte aktualisieren
+            document.getElementById('privacy-title').textContent = t.privacyTitle;
+            document.getElementById('privacy-text').textContent = t.privacyText;
+            closePrivacyBtn.textContent = t.close;
+            privacyBtn.title = t.privacy;
         });
 
         // Drag & Drop-Funktionalität einrichten
@@ -1035,25 +1255,6 @@
         // Regelmäßige Überprüfung beim Laden der Seite und dann täglich
         document.addEventListener('DOMContentLoaded', checkTaskAge);
         setInterval(checkTaskAge, 24 * 60 * 60 * 1000); // Täglich
-        // CSS für den Überfälligkeitsindikator
-        const overdueStyle = document.createElement('style');
-        overdueStyle.textContent = `
-            .overdue-indicator {
-                display: inline-block;
-                background-color: rgba(255, 255, 255, 0.2);
-                border-radius: 4px;
-                padding: 2px 6px;
-                margin-left: 8px;
-                font-size: 0.75rem;
-                color: white;
-            }
-            
-            .overdue-indicator i {
-                color: #fef08a;
-                margin-right: 4px;
-            }
-        `;
-        document.head.appendChild(overdueStyle);
     </script>
 </body>
 </html>
