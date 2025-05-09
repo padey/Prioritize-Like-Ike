@@ -30,11 +30,3 @@ A modern, privacy-friendly Eisenhower Matrix app to help you organize and priori
 ## Privacy
 
 All your data is stored only in your browser's local storage. No data is sent to any server.
-
-## License
-
-MIT License
-
----
-
-Copy and paste this into your README.md file.
